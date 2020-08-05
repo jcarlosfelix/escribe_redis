@@ -1,0 +1,28 @@
+version: '3'
+services:
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  escribe:
+    build: './escribe'
+    depends_on:
+      - redis
+    volumes:
+      - ./escribe:/code
+    command: python escribe.py
+    environment:
+      PYTHONUNBUFFERED: 1
+      REDIS_HOST: redis
+      
+  lectura:
+    build: './lectura'
+    depends_on:
+      - redis
+    volumes:
+      - ./lectura:/code
+    command: python lectura.py
+    environment:
+      PYTHONUNBUFFERED: 1
+      REDIS_HOST: redis      
